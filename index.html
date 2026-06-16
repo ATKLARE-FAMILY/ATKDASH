@@ -1,0 +1,1877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nunc Coepi</title>
+<meta name="application-name" content="Nunc Coepi">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Nunc Coepi">
+<meta name="theme-color" content="#1d4ed8">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;600;700;800&family=Crimson+Pro:ital,wght@1,300;1,400&display=swap');
+
+  :root {
+    --bg: #f0f2f5;
+    --surface: #ffffff;
+    --surface2: #f5f6f8;
+    --border: #dde1e9;
+    --border2: #c8cdd8;
+    --accent: #1d4ed8;
+    --accent-light: #eff4ff;
+    --accent2: #059669;
+    --accent2-light: #ecfdf5;
+    --warn: #d97706;
+    --warn-light: #fffbeb;
+    --danger: #dc2626;
+    --danger-light: #fef2f2;
+    --text: #111827;
+    --text2: #374151;
+    --text3: #6b7280;
+    --text4: #9ca3af;
+    --green-mode: #059669;
+    --amber-mode: #d97706;
+    --red-mode: #dc2626;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.04);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    min-height: 100vh;
+    padding-bottom: 60px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--accent);
+    padding: 14px 20px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow-md);
+  }
+
+  .header-left { display: flex; flex-direction: column; gap: 1px; }
+
+  .header-motto {
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 22px;
+    color: #ffffff;
+    letter-spacing: 0.03em;
+    line-height: 1;
+  }
+
+  .header-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+    line-height: 1;
+  }
+
+  .header-sub {
+    font-size: 11px;
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  .mode-badge {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 13px;
+    border-radius: 20px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border: 1.5px solid;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: rgba(255,255,255,0.12);
+  }
+
+  .mode-badge.green { color: #ffffff; border-color: rgba(255,255,255,0.5); }
+  .mode-badge.amber { color: #fef3c7; border-color: #fbbf24; background: rgba(251,191,36,0.2); }
+  .mode-badge.red   { color: #fee2e2; border-color: #f87171; background: rgba(248,113,113,0.2); }
+
+  .mode-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .green .mode-dot { background: #34d399; box-shadow: 0 0 6px #34d399; }
+  .amber .mode-dot { background: #fbbf24; box-shadow: 0 0 6px #fbbf24; }
+  .red   .mode-dot { background: #f87171; box-shadow: 0 0 6px #f87171; }
+
+  /* LAYOUT */
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px 16px;
+  }
+
+  /* TABS */
+  .tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 20px;
+    background: var(--surface);
+    border-radius: 10px;
+    padding: 4px;
+    box-shadow: var(--shadow);
+  }
+
+  .tab {
+    flex: 1;
+    padding: 9px 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text3);
+    cursor: pointer;
+    border-radius: 7px;
+    text-align: center;
+    transition: all 0.15s;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+  }
+
+  .tab:hover { color: var(--text2); background: var(--surface2); }
+  .tab.active { color: var(--accent); background: var(--accent-light); font-weight: 600; }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* GRID */
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+
+  @media (max-width: 600px) {
+    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: repeat(2, 1fr); }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .header { padding: 12px 16px 10px; }
+    .container { padding: 16px 12px; }
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: var(--shadow);
+  }
+
+  .card-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 8px;
+  }
+
+  .card-value {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--text);
+  }
+
+  .card-unit {
+    font-size: 13px;
+    color: var(--text3);
+    margin-left: 3px;
+  }
+
+  .card-delta {
+    font-size: 12px;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .delta-up { color: var(--danger); }
+  .delta-down { color: var(--accent2); }
+  .delta-neutral { color: var(--text3); }
+
+  /* SECTION HEADERS */
+  .section-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 12px;
+    margin-top: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-title:first-child { margin-top: 0; }
+
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* THE 5 RULES */
+  .rules-grid { display: flex; flex-direction: column; gap: 8px; }
+
+  .rule-card {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    transition: all 0.2s;
+    box-shadow: var(--shadow);
+  }
+
+  .rule-card.checked {
+    border-color: var(--accent2);
+    background: var(--accent2-light);
+    box-shadow: 0 0 0 1px var(--accent2), var(--shadow);
+  }
+
+  .rule-number {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--border2);
+    min-width: 28px;
+    line-height: 1;
+    transition: color 0.2s;
+  }
+
+  .rule-card.checked .rule-number { color: var(--accent2); }
+
+  .rule-info { flex: 1; }
+
+  .rule-title {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+
+  .rule-desc {
+    font-size: 12px;
+    color: var(--text3);
+    line-height: 1.4;
+  }
+
+  .rule-check {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: 2px solid var(--border2);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    background: none;
+  }
+
+  .rule-check:hover { border-color: var(--accent2); background: var(--accent2-light); }
+  .rule-card.checked .rule-check { border-color: var(--accent2); background: var(--accent2); }
+  .rule-check svg { display: none; }
+  .rule-card.checked .rule-check svg { display: block; }
+
+  /* FORM INPUTS */
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .form-group { display: flex; flex-direction: column; gap: 5px; }
+
+  .form-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--text3);
+  }
+
+  .form-input {
+    background: var(--surface2);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 11px 13px;
+    color: var(--text);
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    width: 100%;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    -webkit-appearance: none;
+  }
+
+  .form-input:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(29,78,216,0.1);
+  }
+
+  .form-input::placeholder { color: var(--text4); }
+
+  .save-btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 14px 24px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    width: 100%;
+    letter-spacing: 0.01em;
+    box-shadow: var(--shadow-md);
+  }
+
+  .save-btn:hover { background: #1e40af; }
+  .save-btn:active { transform: scale(0.99); background: #1e3a8a; }
+
+  /* TREND CHART */
+  .chart-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: var(--shadow);
+  }
+
+  .chart-title {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 12px;
+  }
+
+  canvas { width: 100% !important; }
+
+  /* HISTORY TABLE */
+  .history-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  .history-table th {
+    text-align: left;
+    padding: 8px 10px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text3);
+    border-bottom: 1.5px solid var(--border);
+    background: var(--surface2);
+  }
+
+  .history-table td {
+    padding: 10px 10px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text2);
+    font-size: 13px;
+  }
+
+  .history-table tr:last-child td { border-bottom: none; }
+  .history-table tr:hover td { background: var(--surface2); }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .badge-green { background: var(--accent2-light); color: var(--green-mode); }
+  .badge-amber { background: var(--warn-light); color: var(--warn); }
+  .badge-red   { background: var(--danger-light); color: var(--red-mode); }
+
+  /* SOFI COUNTDOWN */
+  .sofi-bar {
+    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: var(--shadow-md);
+    color: white;
+  }
+
+  .sofi-days {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 52px;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1;
+    min-width: 80px;
+  }
+
+  .sofi-info h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+    color: #ffffff;
+  }
+
+  .sofi-info p {
+    font-size: 12px;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.5;
+  }
+
+  .progress-bar-wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .progress-bar-bg {
+    height: 5px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #34d399, #6ee7b7);
+    border-radius: 3px;
+    transition: width 0.5s ease;
+  }
+
+  .progress-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: rgba(255,255,255,0.55);
+  }
+
+  @media (max-width: 500px) {
+    .sofi-bar { flex-wrap: wrap; }
+    .progress-bar-wrap { width: 100%; }
+    .sofi-days { font-size: 44px; }
+  }
+
+  /* WEEKLY SUMMARY */
+  .week-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+
+  .day-col { display: flex; flex-direction: column; gap: 4px; align-items: center; }
+
+  .day-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 1px;
+  }
+
+  .day-dot {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    border: 1.5px solid var(--border);
+    color: var(--text3);
+    background: var(--surface);
+  }
+
+  .day-dot.perfect { background: var(--accent2-light); border-color: var(--green-mode); color: var(--green-mode); }
+  .day-dot.good    { background: var(--accent-light);  border-color: var(--accent);     color: var(--accent); }
+  .day-dot.partial { background: var(--warn-light);    border-color: var(--warn);        color: var(--warn); }
+  .day-dot.miss    { background: var(--danger-light);  border-color: var(--danger);      color: var(--danger); }
+  .day-dot.future  { background: var(--surface2);      border-color: var(--border);      color: var(--text4); }
+
+  .day-weight { font-size: 10px; color: var(--text3); }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--accent2);
+    color: white;
+    padding: 10px 22px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: transform 0.3s ease;
+    z-index: 999;
+    white-space: nowrap;
+    box-shadow: var(--shadow-md);
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* EMPTY STATE */
+  .empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text3);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .garmin-note {
+    background: var(--accent-light);
+    border: 1px solid #bfdbfe;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 12px;
+    color: var(--text2);
+    margin-bottom: 14px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    line-height: 1.5;
+  }
+
+  .garmin-note strong { color: var(--accent); }
+
+  /* BLOODWORK PANEL */
+  .bw-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+
+  .bw-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    box-shadow: var(--shadow);
+  }
+
+  .bw-label { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; font-weight: 600; }
+  .bw-current { font-family: 'Barlow Condensed', sans-serif; font-size: 26px; font-weight: 700; line-height: 1; }
+  .bw-target { font-size: 11px; color: var(--text3); margin-top: 4px; line-height: 1.4; }
+  .bw-good { color: var(--accent2); }
+  .bw-warn { color: var(--warn); }
+  .bw-bad  { color: var(--danger); }
+
+  /* SCROLL AREA for table */
+  .table-scroll { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); background: var(--surface); box-shadow: var(--shadow); }
+
+  .delete-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    color: var(--text3);
+    padding: 3px 9px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .delete-btn:hover { border-color: var(--danger); color: var(--danger); background: var(--danger-light); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <div class="header-motto">Nunc Coepi</div>
+    <div class="header-name">AK Protocol</div>
+    <div class="header-sub" id="todayDate"></div>
+  </div>
+  <div class="mode-badge green" id="modeBadge" onclick="cycleMode()">
+    <div class="mode-dot"></div>
+    <span id="modeText">Green Mode</span>
+  </div>
+</div>
+
+<div class="toast" id="toast">Saved</div>
+
+<div class="container">
+
+  <!-- TABS -->
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('today')">Today</div>
+    <div class="tab" onclick="switchTab('week')">This Week</div>
+    <div class="tab" onclick="switchTab('trends')">Trends</div>
+    <div class="tab" onclick="switchTab('glucose')">Stelo CGM</div>
+    <div class="tab" onclick="switchTab('bloodwork')">Bloodwork</div>
+  </div>
+
+  <!-- ===== TODAY TAB ===== -->
+  <div class="tab-content active" id="tab-today">
+
+    <!-- SOFI COUNTDOWN -->
+    <div class="sofi-bar">
+      <div class="sofi-days" id="sofiDays">--</div>
+      <div class="sofi-info">
+        <h3>SoFi Stadium</h3>
+        <p>Comfortable. Present. Not struggling.<br>Your son is on that field.</p>
+      </div>
+      <div class="progress-bar-wrap" id="sofiProgressWrap">
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="sofiProgress" style="width:0%"></div>
+        </div>
+        <div class="progress-labels">
+          <span>Start</span>
+          <span id="sofiPct">0%</span>
+          <span>Sep 7, 2026</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUICK STATS -->
+    <div class="grid-4" style="margin-bottom:16px">
+      <div class="card">
+        <div class="card-label">Weight</div>
+        <div class="card-value" id="statWeight">--<span class="card-unit">lbs</span></div>
+        <div class="card-delta" id="statWeightDelta"><span class="delta-neutral">No previous entry</span></div>
+      </div>
+      <div class="card">
+        <div class="card-label">HRV</div>
+        <div class="card-value" id="statHRV">--<span class="card-unit">ms</span></div>
+        <div class="card-delta" id="statHRVMode"><span class="delta-neutral">Log today's data</span></div>
+      </div>
+      <div class="card">
+        <div class="card-label">Fasting Glucose</div>
+        <div class="card-value" id="statGlucose">--<span class="card-unit">mg/dL</span></div>
+        <div class="card-delta" id="statGlucoseNote"><span class="delta-neutral">From LibreLink</span></div>
+      </div>
+      <div class="card">
+        <div class="card-label">Time-in-Range</div>
+        <div class="card-value" id="statTIR">--<span class="card-unit">%</span></div>
+        <div class="card-delta" id="statTIRNote"><span class="delta-neutral">Target: 70%+</span></div>
+      </div>
+    </div>
+    <div class="grid-2" style="margin-bottom:16px">
+      <div class="card">
+        <div class="card-label">Sleep Score</div>
+        <div class="card-value" id="statSleep">--<span class="card-unit">/100</span></div>
+        <div class="card-delta" id="statSleepNote"><span class="delta-neutral">From Garmin</span></div>
+      </div>
+      <div class="card">
+        <div class="card-label">Rules Hit</div>
+        <div class="card-value" id="statRules">--<span class="card-unit">/5</span></div>
+        <div class="card-delta" id="statRulesNote"><span class="delta-neutral">Check below</span></div>
+      </div>
+    </div>
+
+    <!-- THE 5 RULES -->
+    <div class="section-title">The 5 Rules <div class="section-line"></div></div>
+
+    <div class="rules-grid" id="rulesGrid">
+      <div class="rule-card" id="rule-0">
+        <div class="rule-number">1</div>
+        <div class="rule-info">
+          <div class="rule-title">Advocare shake + 2 eggs</div>
+          <div class="rule-desc">Breakfast anchor. Keep the shake. Add the eggs.</div>
+        </div>
+        <button class="rule-check" onclick="toggleRule(0)">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l4 4 6-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <div class="rule-card" id="rule-1">
+        <div class="rule-number">2</div>
+        <div class="rule-info">
+          <div class="rule-title">Protein by 2pm</div>
+          <div class="rule-desc">Anything with real protein before the 3pm window. Closes the gap that causes the crash.</div>
+        </div>
+        <button class="rule-check" onclick="toggleRule(1)">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l4 4 6-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <div class="rule-card" id="rule-2">
+        <div class="rule-number">3</div>
+        <div class="rule-info">
+          <div class="rule-title">Dinner unchanged</div>
+          <div class="rule-desc">14oz NY Strip, salmon, or clean protein. Your portion. Your way. Nothing changes here.</div>
+        </div>
+        <button class="rule-check" onclick="toggleRule(2)">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l4 4 6-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <div class="rule-card" id="rule-3">
+        <div class="rule-number">4</div>
+        <div class="rule-info">
+          <div class="rule-title">Kitchen closes at 7pm</div>
+          <div class="rule-desc">One approved sweet before close. Then done. 12-hour insulin clearance window starts now.</div>
+        </div>
+        <button class="rule-check" onclick="toggleRule(3)">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l4 4 6-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <div class="rule-card" id="rule-4">
+        <div class="rule-number">5</div>
+        <div class="rule-info">
+          <div class="rule-title">Saturday is flex day</div>
+          <div class="rule-desc">Real dessert. Pasta if you want it. Built in on purpose. Not a cheat — part of the system.</div>
+        </div>
+        <button class="rule-check" onclick="toggleRule(4)">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l4 4 6-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- LOG TODAY -->
+    <div class="section-title" style="margin-top:28px">Log Today <div class="section-line"></div></div>
+
+    <div class="garmin-note">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;margin-top:1px"><circle cx="8" cy="8" r="7" stroke="#3b82f6" stroke-width="1.5"/><path d="M8 7v5M8 5v1" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <span><strong>Garmin Instinct 2</strong> — Enter your numbers from Garmin Connect manually for now. Phase 2 will connect directly to the Garmin Health API and auto-fill HRV, sleep score, and steps.</span>
+    </div>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">Weight (lbs)</label>
+        <input class="form-input" type="number" id="inputWeight" placeholder="334" step="0.1">
+      </div>
+      <div class="form-group">
+        <label class="form-label">HRV (ms)</label>
+        <input class="form-input" type="number" id="inputHRV" placeholder="38">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Sleep Score (/100)</label>
+        <input class="form-input" type="number" id="inputSleep" placeholder="62" min="0" max="100">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Sleep Duration (hrs)</label>
+        <input class="form-input" type="number" id="inputSleepHrs" placeholder="7.0" step="0.25">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Steps</label>
+        <input class="form-input" type="number" id="inputSteps" placeholder="8500">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Exercise</label>
+        <select class="form-input" id="inputExercise">
+          <option value="">None today</option>
+          <option value="Training — Strength">Training — Strength</option>
+          <option value="Training — Cardio">Training — Cardio</option>
+          <option value="Zone 2 Cardio">Zone 2 Cardio (30-45 min)</option>
+          <option value="Walk">Walk</option>
+          <option value="Rest Day">Rest Day</option>
+        </select>
+      </div>
+    </div>
+    <div class="section-title" style="margin-top:24px;margin-bottom:14px">Glucose <div class="section-line"></div></div>
+    <div class="garmin-note" style="margin-bottom:14px">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;margin-top:1px"><circle cx="8" cy="8" r="7" stroke="#3b82f6" stroke-width="1.5"/><path d="M8 7v5M8 5v1" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <span><strong>LibreLink</strong> — Enter readings manually from the LibreLink app. Time-in-range % is your daily summary from LibreLink.</span>
+    </div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">Fasting (mg/dL)</label>
+        <input class="form-input" type="number" id="inputGlucFasting" placeholder="95">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Post-Breakfast Peak</label>
+        <input class="form-input" type="number" id="inputGlucBreakfast" placeholder="140">
+      </div>
+      <div class="form-group">
+        <label class="form-label">3pm Reading</label>
+        <input class="form-input" type="number" id="inputGluc3pm" placeholder="110">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Post-Dinner 2hr</label>
+        <input class="form-input" type="number" id="inputGlucDinner" placeholder="120">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Time-in-Range (%)</label>
+        <input class="form-input" type="number" id="inputTIR" placeholder="78" min="0" max="100">
+      </div>
+    </div>
+
+    <div class="form-group" style="margin-bottom:14px">
+      <label class="form-label">Notes (optional)</label>
+      <input class="form-input" type="text" id="inputNotes" placeholder="How did today feel? Any triggers, wins, or struggles...">
+    </div>
+    <button class="save-btn" onclick="saveToday()">Save Today's Entry</button>
+  </div>
+
+  <!-- ===== WEEK TAB ===== -->
+  <div class="tab-content" id="tab-week">
+
+    <div class="section-title">This Week <div class="section-line"></div></div>
+
+    <div class="week-grid" id="weekGrid"></div>
+
+    <div class="grid-3" style="margin-bottom:20px">
+      <div class="card">
+        <div class="card-label">Rules Compliance</div>
+        <div class="card-value" id="weekCompliance">--%</div>
+        <div class="card-delta"><span class="delta-neutral" id="weekComplianceNote">No data yet</span></div>
+      </div>
+      <div class="card">
+        <div class="card-label">Avg Sleep Score</div>
+        <div class="card-value" id="weekSleep">--</div>
+        <div class="card-delta"><span class="delta-neutral">7 day average</span></div>
+      </div>
+      <div class="card">
+        <div class="card-label">Avg HRV</div>
+        <div class="card-value" id="weekHRV">--</div>
+        <div class="card-delta"><span class="delta-neutral" id="weekHRVNote">7 day average</span></div>
+      </div>
+    </div>
+
+    <div class="section-title">Weekly Weight <div class="section-line"></div></div>
+    <div class="chart-wrap">
+      <div class="chart-title">7-Day Weight Trend</div>
+      <canvas id="chartWeekWeight"></canvas>
+    </div>
+
+    <div class="section-title">Recent Entries <div class="section-line"></div></div>
+    <div class="table-scroll">
+      <table class="history-table" id="historyTable">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Weight</th>
+            <th>HRV</th>
+            <th>Sleep</th>
+            <th>Fasting</th>
+            <th>TIR</th>
+            <th>Rules</th>
+            <th>Mode</th>
+            <th>Exercise</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="historyBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ===== TRENDS TAB ===== -->
+  <div class="tab-content" id="tab-trends">
+
+    <div class="section-title">Weight <div class="section-line"></div></div>
+    <div class="chart-wrap">
+      <div class="chart-title">All-Time Weight (lbs)</div>
+      <canvas id="chartWeight"></canvas>
+    </div>
+
+    <div class="section-title">Recovery <div class="section-line"></div></div>
+    <div class="chart-wrap">
+      <div class="chart-title">HRV (ms)</div>
+      <canvas id="chartHRV"></canvas>
+    </div>
+    <div class="chart-wrap">
+      <div class="chart-title">Sleep Score (/100)</div>
+      <canvas id="chartSleepScore"></canvas>
+    </div>
+
+    <div class="section-title">Glucose <div class="section-line"></div></div>
+    <div class="chart-wrap">
+      <div class="chart-title">Fasting Glucose (mg/dL) — Target: below 100</div>
+      <canvas id="chartGlucFasting"></canvas>
+    </div>
+    <div class="chart-wrap">
+      <div class="chart-title">Time-in-Range (%) — Target: 70%+</div>
+      <canvas id="chartTIR"></canvas>
+    </div>
+    <div class="chart-wrap">
+      <div class="chart-title">Post-Breakfast Peak (mg/dL)</div>
+      <canvas id="chartGlucBreakfast"></canvas>
+    </div>
+
+    <div class="section-title">90-Day Milestones <div class="section-line"></div></div>
+    <div class="card" id="milestonesCard"></div>
+  </div>
+
+  <!-- ===== STELO CGM TAB ===== -->
+  <div class="tab-content" id="tab-glucose">
+
+    <div class="section-title">Stelo CGM — Live Glucose <div class="section-line"></div></div>
+
+    <div style="background:var(--accent-light);border:1px solid var(--accent);border-radius:10px;padding:14px 16px;margin-bottom:16px;font-size:13px;color:var(--accent);display:flex;gap:10px;align-items:flex-start;line-height:1.5">
+      <span style="font-size:16px">ⓘ</span>
+      <span><strong>Dexcom Stelo</strong> — Connect once to pull live glucose readings directly from your sensor. Credentials stay in your browser only — never sent anywhere except Dexcom.</span>
+    </div>
+
+    <!-- CONNECTION CARD -->
+    <div class="card" style="margin-bottom:16px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+        <div class="section-title" style="margin:0">Dexcom Connection <div class="section-line"></div></div>
+        <span id="cgm-status-badge" style="margin-left:auto;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;background:var(--warn-light);color:var(--warn);border:1px solid var(--warn)">Not Connected</span>
+      </div>
+
+      <div id="cgm-credentials-form">
+        <div class="form-grid" style="margin-bottom:12px">
+          <div class="form-group">
+            <label class="form-label">Client ID</label>
+            <input class="form-input" type="text" id="cgm-client-id" placeholder="Your Dexcom client ID" style="font-family:monospace;font-size:12px">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Client Secret</label>
+            <input class="form-input" type="password" id="cgm-client-secret" placeholder="Your Dexcom client secret" style="font-family:monospace;font-size:12px">
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:10px">
+          <button class="save-btn" onclick="cgmStartAuth()" style="flex:1">Connect Dexcom Stelo</button>
+          <button class="save-btn" onclick="cgmLoadSandbox()" style="background:var(--surface2);color:var(--text3);border:1px solid var(--border);flex:0 0 auto;padding:11px 16px;font-size:13px">Test with sandbox</button>
+        </div>
+        <div style="font-size:11px;color:var(--text4)">🔒 Credentials stored in your browser only.</div>
+      </div>
+
+      <div id="cgm-auth-step" style="display:none">
+        <div style="background:var(--surface2);border-radius:8px;padding:14px;margin-bottom:12px">
+          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px">Step 1 — Authorize with Dexcom</div>
+          <div style="font-size:12px;color:var(--text3);margin-bottom:12px;line-height:1.5">Click below to open Dexcom login. Sign in with your Stelo account and approve access. Your browser will redirect to a localhost URL that won't load — that's expected. Copy the full URL from your address bar and paste it in Step 2.</div>
+          <button class="save-btn" onclick="cgmOpenAuth()" style="margin-bottom:12px">Open Dexcom Authorization Page</button>
+          <div class="form-group">
+            <label class="form-label">Step 2 — Paste the full redirect URL</label>
+            <input class="form-input" type="text" id="cgm-redirect-url" placeholder="http://localhost:8080/callback?code=..." style="font-family:monospace;font-size:12px">
+          </div>
+          <button class="save-btn" onclick="cgmExtractCode()" style="margin-top:8px;width:100%">Extract Code & Connect</button>
+        </div>
+        <div id="cgm-auth-error" style="font-size:12px;color:var(--danger);display:none;padding:8px;background:var(--danger-light);border-radius:6px;margin-top:8px"></div>
+      </div>
+    </div>
+
+    <!-- LIVE GLUCOSE DATA -->
+    <div id="cgm-data-panel" style="display:none">
+      <div class="grid-4" style="margin-bottom:16px">
+        <div class="card">
+          <div class="card-label">Current Glucose</div>
+          <div class="card-value" id="cgm-current">--<span class="card-unit">mg/dL</span></div>
+          <div class="card-delta" id="cgm-trend"><span class="delta-neutral">--</span></div>
+        </div>
+        <div class="card">
+          <div class="card-label">Time in Range</div>
+          <div class="card-value" id="cgm-tir">--<span class="card-unit">%</span></div>
+          <div class="card-delta"><span class="delta-neutral">Target: 70%+ (70–140)</span></div>
+        </div>
+        <div class="card">
+          <div class="card-label">24hr Low / High</div>
+          <div class="card-value" id="cgm-range" style="font-size:22px">-- / --</div>
+          <div class="card-delta"><span class="delta-neutral">mg/dL</span></div>
+        </div>
+        <div class="card">
+          <div class="card-label">Last Reading</div>
+          <div class="card-value" id="cgm-last-time" style="font-size:22px">--</div>
+          <div class="card-delta"><span class="delta-neutral">15-min intervals</span></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:16px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <div class="card-label" style="margin:0">Glucose Trend</div>
+          <div style="display:flex;gap:6px">
+            <button id="cgm-btn-3h" onclick="cgmSetRange(3)" style="font-size:12px;padding:4px 10px;border:1px solid var(--border);border-radius:6px;background:none;cursor:pointer;color:var(--text3)">3h</button>
+            <button id="cgm-btn-6h" onclick="cgmSetRange(6)" style="font-size:12px;padding:4px 10px;border:1px solid var(--border);border-radius:6px;background:none;cursor:pointer;color:var(--text3)">6h</button>
+            <button id="cgm-btn-24h" onclick="cgmSetRange(24)" style="font-size:12px;padding:4px 10px;border:1px solid var(--border);border-radius:6px;background:none;cursor:pointer;color:var(--text3)">24h</button>
+          </div>
+        </div>
+        <canvas id="cgm-chart" height="200" style="width:100%"></canvas>
+      </div>
+
+      <div style="display:flex;gap:8px">
+        <button class="save-btn" onclick="cgmRefresh()" style="flex:1">↻ Refresh Glucose Data</button>
+        <button class="save-btn" onclick="cgmDisconnect()" style="background:var(--danger-light);color:var(--danger);border:1px solid var(--danger);flex:0 0 auto;padding:11px 16px">Disconnect</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== BLOODWORK TAB ===== -->
+  <div class="tab-content" id="tab-bloodwork">
+
+    <div class="section-title">Current Bloodwork vs Target <div class="section-line"></div></div>
+    <p style="font-size:12px;color:var(--text3);margin-bottom:16px;line-height:1.6">April 2026 panel. September 2026 panel is the next definitive measurement. These are the numbers that tell the full story.</p>
+
+    <div class="bw-grid">
+      <div class="bw-card">
+        <div class="bw-label">Fasting Insulin</div>
+        <div class="bw-current bw-bad">28.8 <span style="font-size:14px;font-weight:400">µIU/mL</span></div>
+        <div class="bw-target">Target: below 10 | Nov 2024: 16.3</div>
+      </div>
+      <div class="bw-card">
+        <div class="bw-label">HbA1c</div>
+        <div class="bw-current bw-bad">6.6 <span style="font-size:14px;font-weight:400">%</span></div>
+        <div class="bw-target">Target: below 5.7 | Nov 2024: 6.2</div>
+      </div>
+      <div class="bw-card">
+        <div class="bw-label">Testosterone (Total)</div>
+        <div class="bw-current bw-warn">623 <span style="font-size:14px;font-weight:400">ng/dL</span></div>
+        <div class="bw-target">Target: 700-900 | Nov 2024: 898</div>
+      </div>
+      <div class="bw-card">
+        <div class="bw-label">Estradiol</div>
+        <div class="bw-current bw-bad">&lt;5 <span style="font-size:14px;font-weight:400">pg/mL</span></div>
+        <div class="bw-target">Target: 20-30 | Review anastrozole dose</div>
+      </div>
+      <div class="bw-card">
+        <div class="bw-label">DHEA-S</div>
+        <div class="bw-current bw-bad">41 <span style="font-size:14px;font-weight:400">µg/dL</span></div>
+        <div class="bw-target">Target: 150-200 | Normal: 80-350</div>
+      </div>
+      <div class="bw-card">
+        <div class="bw-label">AST</div>
+        <div class="bw-current bw-warn">46 <span style="font-size:14px;font-weight:400">U/L</span></div>
+        <div class="bw-target">Target: below 40 | Liver flag</div>
+      </div>
+      <div class="bw-card">
+        <div class="bw-label">ALT</div>
+        <div class="bw-current bw-warn">51 <span style="font-size:14px;font-weight:400">U/L</span></div>
+        <div class="bw-target">Target: below 40 | Request liver ultrasound</div>
+      </div>
+      <div class="bw-card">
+        <div class="bw-label">Vitamin B12</div>
+        <div class="bw-current bw-warn">1,288 <span style="font-size:14px;font-weight:400">pg/mL</span></div>
+        <div class="bw-target">Target: 400-900 | Stack audit needed</div>
+      </div>
+      <div class="bw-card">
+        <div class="bw-label">Visceral Fat (VAT)</div>
+        <div class="bw-current bw-bad">1,166 <span style="font-size:14px;font-weight:400">g</span></div>
+        <div class="bw-target">94th percentile | Target: below 500g</div>
+      </div>
+      <div class="bw-card">
+        <div class="bw-label">Lean Mass</div>
+        <div class="bw-current bw-good">208 <span style="font-size:14px;font-weight:400">lbs</span></div>
+        <div class="bw-target">99th percentile for age 57 — protect this</div>
+      </div>
+    </div>
+
+    <div class="section-title" style="margin-top:28px">New Provider Agenda <div class="section-line"></div></div>
+    <div class="card">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border)">
+          <span class="badge badge-red">URGENT</span>
+          <div>
+            <div style="font-weight:600;font-size:13px;margin-bottom:2px">Metformin dose review</div>
+            <div style="font-size:12px;color:var(--text3)">A1c 6.6% and insulin 28.8 despite Metformin + Tirzepatide. Current dose not controlling it.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border)">
+          <span class="badge badge-red">URGENT</span>
+          <div>
+            <div style="font-weight:600;font-size:13px;margin-bottom:2px">DHEA-S retest + estradiol baseline</div>
+            <div style="font-size:12px;color:var(--text3)">DHEA-S 41 not retested in April. Do not start DHEA without estradiol baseline.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border)">
+          <span class="badge badge-red">URGENT</span>
+          <div>
+            <div style="font-weight:600;font-size:13px;margin-bottom:2px">Liver ultrasound</div>
+            <div style="font-size:12px;color:var(--text3)">AST 46 / ALT 51 elevated. Rule out NAFLD progression.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border)">
+          <span class="badge badge-amber">SOON</span>
+          <div>
+            <div style="font-weight:600;font-size:13px;margin-bottom:2px">Anastrozole dose review</div>
+            <div style="font-size:12px;color:var(--text3)">Estradiol &lt;5 pg/mL for over a year. Bone loss and cardiovascular risk. Target 20-30.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 0">
+          <span class="badge badge-amber">SOON</span>
+          <div>
+            <div style="font-weight:600;font-size:13px;margin-bottom:2px">Tesamorelin discussion</div>
+            <div style="font-size:12px;color:var(--text3)">VAT at 94th percentile. FDA-approved off-label for visceral fat. Bring DEXA scan.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// =====================
+// DATA LAYER
+// =====================
+const STORAGE_KEY = 'ak_protocol_v1';
+const MODE_KEY = 'ak_mode';
+const RULES_KEY = 'ak_today_rules';
+const SOFI_DATE = new Date('2026-09-07');
+const START_DATE = new Date('2026-06-10');
+
+function getData() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+  catch(e) { return []; }
+}
+
+function saveData(entries) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+}
+
+function todayKey() {
+  return new Date().toISOString().slice(0,10);
+}
+
+function getTodayRules() {
+  try {
+    const stored = JSON.parse(localStorage.getItem(RULES_KEY)) || {};
+    if (stored.date === todayKey()) return stored.rules || [false,false,false,false,false];
+    return [false,false,false,false,false];
+  } catch(e) { return [false,false,false,false,false]; }
+}
+
+function saveTodayRules(rules) {
+  localStorage.setItem(RULES_KEY, JSON.stringify({ date: todayKey(), rules }));
+}
+
+let todayRules = getTodayRules();
+
+// =====================
+// MODE
+// =====================
+let currentMode = localStorage.getItem(MODE_KEY) || 'green';
+
+function cycleMode() {
+  const modes = ['green','amber','red'];
+  const idx = modes.indexOf(currentMode);
+  currentMode = modes[(idx+1)%3];
+  localStorage.setItem(MODE_KEY, currentMode);
+  renderMode();
+}
+
+function renderMode() {
+  const badge = document.getElementById('modeBadge');
+  const text = document.getElementById('modeText');
+  badge.className = 'mode-badge ' + currentMode;
+  const labels = { green: 'Green Mode', amber: 'Amber Mode', red: 'Red Mode' };
+  text.textContent = labels[currentMode];
+}
+
+// =====================
+// SOFI COUNTDOWN
+// =====================
+function renderSofi() {
+  const now = new Date();
+  const diff = Math.ceil((SOFI_DATE - now) / (1000*60*60*24));
+  document.getElementById('sofiDays').textContent = Math.max(0, diff);
+
+  const total = SOFI_DATE - START_DATE;
+  const elapsed = now - START_DATE;
+  const pct = Math.min(100, Math.max(0, Math.round((elapsed/total)*100)));
+  document.getElementById('sofiProgress').style.width = pct + '%';
+  document.getElementById('sofiPct').textContent = pct + '%';
+}
+
+// =====================
+// RULES
+// =====================
+function toggleRule(i) {
+  todayRules[i] = !todayRules[i];
+  saveTodayRules(todayRules);
+  renderRules();
+}
+
+function renderRules() {
+  todayRules.forEach((checked, i) => {
+    const card = document.getElementById('rule-' + i);
+    if (checked) card.classList.add('checked');
+    else card.classList.remove('checked');
+  });
+  const count = todayRules.filter(Boolean).length;
+  document.getElementById('statRules').innerHTML = count + '<span class="card-unit">/5</span>';
+  const notes = ['Keep going', 'Good start', 'Halfway there', 'Strong day', 'Almost perfect', 'Perfect day'];
+  document.getElementById('statRulesNote').innerHTML = '<span class="delta-neutral">' + notes[count] + '</span>';
+}
+
+// =====================
+// SAVE TODAY
+// =====================
+function saveToday() {
+  const weight = parseFloat(document.getElementById('inputWeight').value);
+  const hrv = parseFloat(document.getElementById('inputHRV').value);
+  const sleep = parseFloat(document.getElementById('inputSleep').value);
+  const sleepHrs = parseFloat(document.getElementById('inputSleepHrs').value);
+  const steps = parseInt(document.getElementById('inputSteps').value);
+  const exercise = document.getElementById('inputExercise').value;
+  const notes = document.getElementById('inputNotes').value;
+  const glucFasting = parseFloat(document.getElementById('inputGlucFasting').value);
+  const glucBreakfast = parseFloat(document.getElementById('inputGlucBreakfast').value);
+  const gluc3pm = parseFloat(document.getElementById('inputGluc3pm').value);
+  const glucDinner = parseFloat(document.getElementById('inputGlucDinner').value);
+  const tir = parseFloat(document.getElementById('inputTIR').value);
+
+  if (!weight && !hrv && !sleep && !sleepHrs && !steps && !exercise && !notes && !glucFasting && !glucBreakfast && !gluc3pm && !glucDinner && !tir) {
+    showToast('Enter at least one value');
+    return;
+  }
+
+  const entries = getData();
+  const key = todayKey();
+  const existingIdx = entries.findIndex(e => e.date === key);
+  const existing = existingIdx >= 0 ? entries[existingIdx] : {};
+
+  // Merge: only overwrite a field if a new value was entered; keep existing otherwise
+  const entry = {
+    date: key,
+    weight:        weight        || existing.weight        || null,
+    hrv:           hrv           || existing.hrv           || null,
+    sleep:         sleep         || existing.sleep         || null,
+    sleepHrs:      sleepHrs      || existing.sleepHrs      || null,
+    steps:         steps         || existing.steps         || null,
+    exercise:      exercise      || existing.exercise      || null,
+    notes:         notes         || existing.notes         || null,
+    rules:         [...todayRules],
+    mode:          currentMode,
+    glucFasting:   glucFasting   || existing.glucFasting   || null,
+    glucBreakfast: glucBreakfast || existing.glucBreakfast || null,
+    gluc3pm:       gluc3pm       || existing.gluc3pm       || null,
+    glucDinner:    glucDinner    || existing.glucDinner    || null,
+    tir:           !isNaN(tir) && tir !== null ? tir : (existing.tir ?? null)
+  };
+
+  if (existingIdx >= 0) entries[existingIdx] = entry;
+  else entries.unshift(entry);
+
+  saveData(entries);
+  renderStats();
+  renderWeekTab();
+  renderTrendsTab();
+  prefillForm();
+  showToast('Saved ✓');
+}
+
+// =====================
+// PREFILL FORM WITH TODAY'S EXISTING VALUES
+// =====================
+function prefillForm() {
+  const today = getData().find(e => e.date === todayKey());
+  
+  const fields = ['inputWeight','inputHRV','inputSleep','inputSleepHrs','inputSteps',
+                  'inputExercise','inputNotes','inputGlucFasting','inputGlucBreakfast',
+                  'inputGluc3pm','inputGlucDinner','inputTIR'];
+
+  if (!today) {
+    // No entry for today — clear everything
+    fields.forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+    return;
+  }
+
+  // Entry exists for today — prefill with saved values
+  const set = (id, val) => {
+    const el = document.getElementById(id);
+    if (el && val !== null && val !== undefined) el.value = val;
+  };
+
+  set('inputWeight',        today.weight);
+  set('inputHRV',           today.hrv);
+  set('inputSleep',         today.sleep);
+  set('inputSleepHrs',      today.sleepHrs);
+  set('inputSteps',         today.steps);
+  set('inputExercise',      today.exercise);
+  set('inputNotes',         today.notes);
+  set('inputGlucFasting',   today.glucFasting);
+  set('inputGlucBreakfast', today.glucBreakfast);
+  set('inputGluc3pm',       today.gluc3pm);
+  set('inputGlucDinner',    today.glucDinner);
+  set('inputTIR',           today.tir);
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// =====================
+// STATS (TODAY)
+// =====================
+function renderStats() {
+  const entries = getData();
+  const today = entries.find(e => e.date === todayKey());
+  const yesterday = entries.find(e => e.date !== todayKey());
+
+  if (today?.weight) {
+    document.getElementById('statWeight').innerHTML = today.weight + '<span class="card-unit">lbs</span>';
+    if (yesterday?.weight) {
+      const diff = (today.weight - yesterday.weight).toFixed(1);
+      const cls = diff > 0 ? 'delta-up' : 'delta-down';
+      const sign = diff > 0 ? '+' : '';
+      document.getElementById('statWeightDelta').innerHTML = '<span class="' + cls + '">' + sign + diff + ' from last entry</span>';
+    }
+  }
+
+  if (today?.hrv) {
+    document.getElementById('statHRV').innerHTML = today.hrv + '<span class="card-unit">ms</span>';
+    let modeLabel, modeClass;
+    if (today.hrv >= 40) { modeLabel = 'Green Mode'; modeClass = 'delta-neutral'; }
+    else if (today.hrv >= 35) { modeLabel = 'Amber — watch today'; modeClass = 'delta-neutral'; }
+    else { modeLabel = 'Red Mode — lock down'; modeClass = 'delta-up'; }
+    document.getElementById('statHRVMode').innerHTML = '<span class="' + modeClass + '">' + modeLabel + '</span>';
+  }
+
+  if (today?.sleep) {
+    document.getElementById('statSleep').innerHTML = today.sleep + '<span class="card-unit">/100</span>';
+    const q = today.sleep >= 75 ? 'Good sleep' : today.sleep >= 55 ? 'Fair sleep' : 'Poor sleep — cortisol risk today';
+    const cls = today.sleep >= 75 ? 'delta-down' : today.sleep >= 55 ? 'delta-neutral' : 'delta-up';
+    document.getElementById('statSleepNote').innerHTML = '<span class="' + cls + '">' + q + '</span>';
+  }
+
+  if (today?.glucFasting) {
+    document.getElementById('statGlucose').innerHTML = today.glucFasting + '<span class="card-unit">mg/dL</span>';
+    const g = today.glucFasting < 100 ? 'Normal' : today.glucFasting < 126 ? 'Pre-diabetic range' : 'High — above 126';
+    const gc = today.glucFasting < 100 ? 'delta-down' : today.glucFasting < 126 ? 'delta-neutral' : 'delta-up';
+    document.getElementById('statGlucoseNote').innerHTML = '<span class="' + gc + '">' + g + '</span>';
+  }
+
+  if (today?.tir !== null && today?.tir !== undefined) {
+    document.getElementById('statTIR').innerHTML = today.tir + '<span class="card-unit">%</span>';
+    const t = today.tir >= 70 ? 'On target' : today.tir >= 50 ? 'Below target' : 'Low — review today';
+    const tc = today.tir >= 70 ? 'delta-down' : today.tir >= 50 ? 'delta-neutral' : 'delta-up';
+    document.getElementById('statTIRNote').innerHTML = '<span class="' + tc + '">' + t + '</span>';
+  }
+}
+
+// =====================
+// WEEK TAB
+// =====================
+function renderWeekTab() {
+  const entries = getData();
+  const days = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    days.push(d.toISOString().slice(0,10));
+  }
+
+  // Week grid
+  const grid = document.getElementById('weekGrid');
+  grid.innerHTML = '';
+  days.forEach(day => {
+    const entry = entries.find(e => e.date === day);
+    const d = new Date(day + 'T12:00:00');
+    const label = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()];
+    const isFuture = day > todayKey();
+
+    let dotClass = 'future';
+    let dotText = '--';
+    if (entry) {
+      const rules = entry.rules ? entry.rules.filter(Boolean).length : 0;
+      dotText = rules + '/5';
+      if (rules === 5) dotClass = 'perfect';
+      else if (rules >= 4) dotClass = 'good';
+      else if (rules >= 2) dotClass = 'partial';
+      else dotClass = 'miss';
+    } else if (!isFuture) {
+      dotClass = 'miss';
+      dotText = '0/5';
+    }
+
+    grid.innerHTML += `
+      <div class="day-col">
+        <div class="day-label">${label}</div>
+        <div class="day-dot ${dotClass}">${dotText}</div>
+        <div class="day-weight">${entry?.weight ? entry.weight + 'lb' : ''}</div>
+      </div>`;
+  });
+
+  // Weekly stats
+  const weekEntries = days.map(d => entries.find(e => e.date === d)).filter(Boolean);
+  if (weekEntries.length > 0) {
+    const totalRules = weekEntries.reduce((sum, e) => sum + (e.rules ? e.rules.filter(Boolean).length : 0), 0);
+    const maxRules = weekEntries.length * 5;
+    const pct = Math.round((totalRules / maxRules) * 100);
+    document.getElementById('weekCompliance').textContent = pct + '%';
+    document.getElementById('weekComplianceNote').textContent = totalRules + ' of ' + maxRules + ' rules hit';
+
+    const sleepAvg = weekEntries.filter(e => e.sleep).reduce((s,e,_,a) => s + e.sleep/a.length, 0);
+    if (sleepAvg > 0) document.getElementById('weekSleep').innerHTML = Math.round(sleepAvg) + '<span class="card-unit">/100</span>';
+
+    const hrvAvg = weekEntries.filter(e => e.hrv).reduce((s,e,_,a) => s + e.hrv/a.length, 0);
+    if (hrvAvg > 0) {
+      document.getElementById('weekHRV').innerHTML = Math.round(hrvAvg) + '<span class="card-unit">ms</span>';
+      const modeAvg = hrvAvg >= 40 ? 'Avg: Green Mode' : hrvAvg >= 35 ? 'Avg: Amber' : 'Avg: Red Mode — high stress week';
+      document.getElementById('weekHRVNote').textContent = modeAvg;
+    }
+  }
+
+  // History table
+  const tbody = document.getElementById('historyBody');
+  tbody.innerHTML = '';
+  const recent = entries.slice(0, 14);
+  if (recent.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="10" class="empty">No entries yet. Log your first day above.</td></tr>';
+    return;
+  }
+  recent.forEach(e => {
+    const modeClass = e.mode === 'green' ? 'badge-green' : e.mode === 'amber' ? 'badge-amber' : 'badge-red';
+    const rules = e.rules ? e.rules.filter(Boolean).length : 0;
+    const glucClass = e.glucFasting ? (e.glucFasting < 100 ? 'style="color:var(--accent2)"' : e.glucFasting < 126 ? 'style="color:var(--warn)"' : 'style="color:var(--danger)"') : '';
+    const tirClass = e.tir ? (e.tir >= 70 ? 'style="color:var(--accent2)"' : e.tir >= 50 ? 'style="color:var(--warn)"' : 'style="color:var(--danger)"') : '';
+    tbody.innerHTML += `
+      <tr>
+        <td>${e.date}</td>
+        <td>${e.weight ? e.weight + ' lbs' : '—'}</td>
+        <td>${e.hrv ? e.hrv + ' ms' : '—'}</td>
+        <td>${e.sleep ? e.sleep + '/100' + (e.sleepHrs ? ' · ' + e.sleepHrs + 'h' : '') : '—'}</td>
+        <td ${glucClass}>${e.glucFasting ? e.glucFasting : '—'}</td>
+        <td ${tirClass}>${e.tir !== null && e.tir !== undefined ? e.tir + '%' : '—'}</td>
+        <td>${rules}/5</td>
+        <td><span class="badge ${modeClass}">${e.mode || '—'}</span></td>
+        <td>${e.exercise || '—'}</td>
+        <td><button class="delete-btn" onclick="deleteEntry('${e.date}')">×</button></td>
+      </tr>`;
+  });
+
+  // Week weight chart
+  drawLineChart('chartWeekWeight', days, days.map(d => {
+    const e = entries.find(x => x.date === d);
+    return e?.weight || null;
+  }), '#3b82f6', 'lbs');
+}
+
+function deleteEntry(date) {
+  const entries = getData().filter(e => e.date !== date);
+  saveData(entries);
+  renderStats();
+  renderWeekTab();
+  renderTrendsTab();
+  showToast('Entry removed');
+}
+
+// =====================
+// TRENDS TAB
+// =====================
+function renderTrendsTab() {
+  const entries = getData().slice().reverse();
+  const dates = entries.map(e => e.date.slice(5));
+  const weights = entries.map(e => e.weight);
+  const hrvs = entries.map(e => e.hrv);
+  const sleeps = entries.map(e => e.sleep);
+  const glucFastings = entries.map(e => e.glucFasting);
+  const tirs = entries.map(e => e.tir);
+  const glucBreakfasts = entries.map(e => e.glucBreakfast);
+
+  drawLineChart('chartWeight', dates, weights, '#3b82f6', 'lbs', 334);
+  drawLineChart('chartHRV', dates, hrvs, '#10b981', 'ms');
+  drawLineChart('chartSleepScore', dates, sleeps, '#f59e0b', '/100');
+  drawLineChart('chartGlucFasting', dates, glucFastings, '#ef4444', 'mg/dL');
+  drawLineChart('chartTIR', dates, tirs, '#10b981', '%');
+  drawLineChart('chartGlucBreakfast', dates, glucBreakfasts, '#f59e0b', 'mg/dL');
+
+  // Milestones
+  const latestWeight = entries.filter(e=>e.weight).pop()?.weight;
+  const mc = document.getElementById('milestonesCard');
+  const milestones = [
+    { label: 'Week 1-2', target: '2-5 lb drop', note: 'Bloating reduces. Morning energy improves.' },
+    { label: 'Week 3-4', target: 'Scale may stall', note: 'Normal. Body adjusting. Hold the protocol.' },
+    { label: 'Week 5-8', target: '1-1.5 lbs/week', note: 'Clothes looser. Afternoon energy more stable.' },
+    { label: 'Week 9-13', target: '~314 lbs', note: 'A1c and insulin measurably lower at September panel.' },
+    { label: 'September 2026', target: 'SoFi Stadium', note: 'Comfortable. Present. Not struggling.' }
+  ];
+  mc.innerHTML = milestones.map((m,i) => `
+    <div style="display:flex;gap:16px;align-items:flex-start;padding:12px 0;${i<milestones.length-1?'border-bottom:1px solid var(--border)':''}">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;min-width:90px">${m.label}</div>
+      <div>
+        <div style="font-weight:600;font-size:13px;color:var(--accent);margin-bottom:2px">${m.target}</div>
+        <div style="font-size:12px;color:var(--text3)">${m.note}</div>
+      </div>
+    </div>`).join('');
+}
+
+// =====================
+// CHARTING (no dependency)
+// =====================
+function drawLineChart(canvasId, labels, data, color, unit, startBaseline) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+
+  // Get width from parent container, not the canvas itself
+  const parent = canvas.parentElement;
+  const W = parent ? parent.clientWidth - 32 : 320; // subtract card padding
+  const H = 180;
+
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  ctx.scale(dpr, dpr);
+
+  const validData = data.filter(v => v !== null && v !== undefined);
+  if (validData.length === 0) {
+    ctx.fillStyle = '#9ca3af';
+    ctx.font = '13px Inter, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('No data yet — start logging', W / 2, H / 2);
+    return;
+  }
+
+  const pad = { top: 20, right: 16, bottom: 36, left: 44 };
+  const cW = W - pad.left - pad.right;
+  const cH = H - pad.top - pad.bottom;
+
+  const min = Math.min(...validData);
+  const max = Math.max(...validData);
+  const range = max - min || 10;
+  const yMin = min - range * 0.2;
+  const yMax = max + range * 0.2;
+
+  const xScale = i => pad.left + (i / (data.length - 1 || 1)) * cW;
+  const yScale = v => pad.top + cH - ((v - yMin) / (yMax - yMin)) * cH;
+
+  // Grid lines — just 3 for cleanliness on mobile
+  ctx.strokeStyle = '#e5e7eb';
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= 3; i++) {
+    const y = pad.top + (cH / 3) * i;
+    ctx.beginPath();
+    ctx.moveTo(pad.left, y);
+    ctx.lineTo(pad.left + cW, y);
+    ctx.stroke();
+    const val = yMax - ((yMax - yMin) / 3) * i;
+    ctx.fillStyle = '#9ca3af';
+    ctx.font = '11px Inter, sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillText(Math.round(val), pad.left - 6, y + 4);
+  }
+
+  // Area fill
+  const gradient = ctx.createLinearGradient(0, pad.top, 0, pad.top + cH);
+  gradient.addColorStop(0, color + '28');
+  gradient.addColorStop(1, color + '00');
+
+  const firstValid = data.findIndex(v => v !== null && v !== undefined);
+  const lastValid = data.reduce((acc, v, i) => (v !== null && v !== undefined ? i : acc), -1);
+
+  ctx.beginPath();
+  let firstDrawn = false;
+  data.forEach((v, i) => {
+    if (v === null || v === undefined) return;
+    if (!firstDrawn) { ctx.moveTo(xScale(i), yScale(v)); firstDrawn = true; }
+    else ctx.lineTo(xScale(i), yScale(v));
+  });
+  if (lastValid >= 0) {
+    ctx.lineTo(xScale(lastValid), pad.top + cH);
+    ctx.lineTo(xScale(firstValid), pad.top + cH);
+  }
+  ctx.closePath();
+  ctx.fillStyle = gradient;
+  ctx.fill();
+
+  // Line
+  ctx.beginPath();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2.5;
+  ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
+  firstDrawn = false;
+  data.forEach((v, i) => {
+    if (v === null || v === undefined) return;
+    if (!firstDrawn) { ctx.moveTo(xScale(i), yScale(v)); firstDrawn = true; }
+    else ctx.lineTo(xScale(i), yScale(v));
+  });
+  ctx.stroke();
+
+  // Dots — slightly larger for touch screens
+  data.forEach((v, i) => {
+    if (v === null || v === undefined) return;
+    ctx.beginPath();
+    ctx.arc(xScale(i), yScale(v), 4, 0, Math.PI * 2);
+    ctx.fillStyle = '#ffffff';
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(xScale(i), yScale(v), 3, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.fill();
+  });
+
+  // X labels — show max 6 to avoid crowding
+  const maxLabels = 6;
+  const nth = Math.max(1, Math.ceil(data.length / maxLabels));
+  ctx.fillStyle = '#9ca3af';
+  ctx.font = '11px Inter, sans-serif';
+  ctx.textAlign = 'center';
+  data.forEach((v, i) => {
+    if (i % nth === 0 && labels[i]) {
+      ctx.fillText(labels[i], xScale(i), H - 8);
+    }
+  });
+}
+
+// =====================
+// STELO CGM
+// =====================
+let cgmToken = null;
+let cgmRefreshToken = null;
+let cgmData = [];
+let cgmRange = 3;
+let cgmIsSandbox = false;
+const CGM_TOKEN_KEY = 'ak_cgm_token';
+const CGM_REFRESH_KEY = 'ak_cgm_refresh';
+const CGM_CLIENT_ID = 'nHXET9YD0k13JsRSZu6szU8n1h4S4UJ3';
+
+function cgmInit() {
+  const t = localStorage.getItem(CGM_TOKEN_KEY);
+  const r = localStorage.getItem(CGM_REFRESH_KEY);
+  if (t) { cgmToken = t; cgmRefreshToken = r; cgmSetConnected(false); cgmFetchData(); }
+}
+
+function cgmStartAuth() {
+  const secret = document.getElementById('cgm-client-secret').value.trim();
+  if (!secret) { alert('Please enter your Client Secret.'); return; }
+  localStorage.setItem('ak_cgm_secret_temp', secret);
+  document.getElementById('cgm-credentials-form').style.display = 'none';
+  document.getElementById('cgm-auth-step').style.display = 'block';
+}
+
+function cgmOpenAuth() {
+  const params = new URLSearchParams({ client_id: CGM_CLIENT_ID, redirect_uri: 'http://localhost:8080/callback', response_type: 'code', scope: 'offline_access', state: 'akprotocol' });
+  window.open('https://api.dexcom.com/v2/oauth2/login?' + params.toString(), '_blank');
+}
+
+function cgmExtractCode() {
+  const url = document.getElementById('cgm-redirect-url').value.trim();
+  let code = null;
+  try { code = new URL(url).searchParams.get('code'); } catch(e) {}
+  if (!code) { const m = url.match(/[?&]code=([^&]+)/); if (m) code = m[1]; }
+  if (!code) { cgmShowError('No code found. Copy the full URL from your browser after approving access on the Dexcom page.'); return; }
+  cgmExchangeToken(code);
+}
+
+async function cgmExchangeToken(code) {
+  try {
+    const res = await fetch('/.netlify/functions/dexcom-token', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code, grant_type: 'authorization_code' }) });
+    const data = await res.json();
+    if (data.access_token) {
+      cgmToken = data.access_token; cgmRefreshToken = data.refresh_token;
+      localStorage.setItem(CGM_TOKEN_KEY, cgmToken);
+      if (cgmRefreshToken) localStorage.setItem(CGM_REFRESH_KEY, cgmRefreshToken);
+      localStorage.removeItem('ak_cgm_secret_temp');
+      cgmSetConnected(true); cgmFetchData();
+    } else { cgmShowError('Token exchange failed: ' + (data.error || 'Unknown error')); }
+  } catch(e) { cgmShowError('Connection error: ' + e.message); }
+}
+
+async function cgmFetchData() {
+  if (cgmIsSandbox) { cgmRenderData(); return; }
+  const end = new Date(); const start = new Date(end.getTime() - 24*60*60*1000);
+  const params = new URLSearchParams({ startDate: start.toISOString().slice(0,19), endDate: end.toISOString().slice(0,19) });
+  try {
+    const res = await fetch('https://api.dexcom.com/v3/users/self/egvs?' + params, { headers: { 'Authorization': 'Bearer ' + cgmToken } });
+    if (res.status === 401 && cgmRefreshToken) { await cgmRefreshToken_(); return; }
+    const data = await res.json();
+    if (data.egvs) { cgmData = data.egvs; cgmRenderData(); }
+    else { cgmShowError('Could not fetch data: ' + JSON.stringify(data)); }
+  } catch(e) { cgmShowError('Fetch error: ' + e.message); }
+}
+
+async function cgmRefreshToken_() {
+  try {
+    const res = await fetch('/.netlify/functions/dexcom-token', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ grant_type: 'refresh_token', refresh_token: cgmRefreshToken }) });
+    const data = await res.json();
+    if (data.access_token) {
+      cgmToken = data.access_token; cgmRefreshToken = data.refresh_token;
+      localStorage.setItem(CGM_TOKEN_KEY, cgmToken);
+      if (cgmRefreshToken) localStorage.setItem(CGM_REFRESH_KEY, cgmRefreshToken);
+      cgmFetchData();
+    } else { cgmDisconnect(); cgmShowError('Session expired. Please reconnect.'); }
+  } catch(e) { cgmShowError('Refresh error: ' + e.message); }
+}
+
+function cgmLoadSandbox() {
+  cgmIsSandbox = true; const now = new Date(); cgmData = [];
+  for (let i = 96; i >= 0; i--) {
+    const t = new Date(now.getTime() - i * 15 * 60000); const h = t.getHours();
+    let base = 125;
+    if (h >= 5 && h < 7) base = 139;
+    else if (h >= 7 && h < 9) base = 148;
+    else if (h >= 9 && h < 11) base = 137;
+    else if (h >= 12 && h < 13) base = 148;
+    else if (h >= 13 && h < 15) base = 137;
+    else if (h >= 17 && h < 18) base = 155;
+    else if (h >= 18 && h < 20) base = 140;
+    else if (h >= 22 || h < 5) base = 112 + Math.sin(i * 0.2) * 6;
+    cgmData.push({ value: Math.round(base + (Math.random()-0.5)*7), systemTime: t.toISOString(), trend: 'flat' });
+  }
+  cgmSetConnected(true, true); cgmRenderData();
+}
+
+function cgmSetConnected(showData, isSandbox) {
+  cgmIsSandbox = isSandbox || false;
+  document.getElementById('cgm-credentials-form').style.display = 'none';
+  document.getElementById('cgm-auth-step').style.display = 'none';
+  const badge = document.getElementById('cgm-status-badge');
+  badge.textContent = cgmIsSandbox ? 'Sandbox' : 'Connected';
+  badge.style.background = 'var(--accent2-light)'; badge.style.color = 'var(--accent2)'; badge.style.borderColor = 'var(--accent2)';
+  if (showData) document.getElementById('cgm-data-panel').style.display = 'block';
+}
+
+function cgmRenderData() {
+  document.getElementById('cgm-data-panel').style.display = 'block';
+  if (!cgmData.length) return;
+  const latest = cgmData[cgmData.length-1]; const val = latest.value;
+  const el = document.getElementById('cgm-current');
+  el.innerHTML = Math.round(val) + '<span class="card-unit">mg/dL</span>';
+  el.style.color = val > 180 ? 'var(--danger)' : val > 140 ? 'var(--warn)' : val < 70 ? 'var(--danger)' : 'var(--accent2)';
+  const trendMap = { flat:'→ Stable', rising:'↑ Rising', risingRapidly:'↑↑ Rising fast', falling:'↓ Falling', fallingRapidly:'↓↓ Falling fast' };
+  document.getElementById('cgm-trend').innerHTML = '<span class="delta-neutral">' + (trendMap[latest.trend] || '→ Stable') + '</span>';
+  const inRange = cgmData.filter(d => d.value >= 70 && d.value <= 140).length;
+  const tir = Math.round((inRange/cgmData.length)*100);
+  const tirEl = document.getElementById('cgm-tir');
+  tirEl.innerHTML = tir + '<span class="card-unit">%</span>';
+  tirEl.style.color = tir >= 70 ? 'var(--accent2)' : tir >= 50 ? 'var(--warn)' : 'var(--danger)';
+  const vals = cgmData.map(d => d.value);
+  document.getElementById('cgm-range').textContent = Math.round(Math.min(...vals)) + ' / ' + Math.round(Math.max(...vals));
+  const t = new Date(latest.systemTime);
+  document.getElementById('cgm-last-time').textContent = t.toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+  cgmSetRange(cgmRange);
+}
+
+function cgmSetRange(h) {
+  cgmRange = h;
+  ['3','6','24'].forEach(x => {
+    const btn = document.getElementById('cgm-btn-'+x+'h');
+    if (btn) { btn.style.borderColor = x==h ? 'var(--accent)' : 'var(--border)'; btn.style.color = x==h ? 'var(--accent)' : 'var(--text3)'; btn.style.fontWeight = x==h ? '600' : '400'; }
+  });
+  cgmDrawChart();
+}
+
+function cgmDrawChart() {
+  const canvas = document.getElementById('cgm-chart');
+  if (!canvas || !cgmData.length) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const W = canvas.offsetWidth || 600; const H = 200;
+  canvas.width = W*dpr; canvas.height = H*dpr; ctx.scale(dpr, dpr);
+  const now = new Date();
+  const cutoff = new Date(now.getTime() - cgmRange*60*60*1000);
+  const filtered = cgmData.filter(d => new Date(d.systemTime) >= cutoff);
+  if (!filtered.length) return;
+  const pad = { top:12, right:16, bottom:28, left:44 };
+  const cW = W-pad.left-pad.right; const cH = H-pad.top-pad.bottom;
+  const minV=60, maxV=220;
+  const xS = i => pad.left + (i/(filtered.length-1||1))*cW;
+  const yS = v => pad.top + cH - ((Math.min(Math.max(v,minV),maxV)-minV)/(maxV-minV))*cH;
+  ctx.strokeStyle = '#dde1e9'; ctx.lineWidth = 1;
+  [70,100,140,180].forEach(y => {
+    const yp = yS(y);
+    ctx.beginPath(); ctx.moveTo(pad.left,yp); ctx.lineTo(pad.left+cW,yp); ctx.stroke();
+    ctx.fillStyle='#9ca3af'; ctx.font='10px Inter,sans-serif'; ctx.textAlign='right';
+    ctx.fillText(y, pad.left-4, yp+3);
+  });
+  const grad = ctx.createLinearGradient(0,pad.top,0,pad.top+cH);
+  grad.addColorStop(0,'rgba(29,78,216,0.12)'); grad.addColorStop(1,'rgba(29,78,216,0)');
+  ctx.beginPath();
+  filtered.forEach((d,i) => { i===0 ? ctx.moveTo(xS(i),yS(d.value)) : ctx.lineTo(xS(i),yS(d.value)); });
+  ctx.lineTo(xS(filtered.length-1),pad.top+cH); ctx.lineTo(xS(0),pad.top+cH);
+  ctx.closePath(); ctx.fillStyle=grad; ctx.fill();
+  ctx.beginPath(); ctx.strokeStyle='#1d4ed8'; ctx.lineWidth=2; ctx.lineJoin='round';
+  filtered.forEach((d,i) => { i===0 ? ctx.moveTo(xS(i),yS(d.value)) : ctx.lineTo(xS(i),yS(d.value)); });
+  ctx.stroke();
+  filtered.forEach((d,i) => {
+    if (d.value>180||d.value<70) { ctx.beginPath(); ctx.arc(xS(i),yS(d.value),3,0,Math.PI*2); ctx.fillStyle='#dc2626'; ctx.fill(); }
+  });
+  const nth = Math.max(1,Math.floor(filtered.length/6));
+  ctx.fillStyle='#9ca3af'; ctx.font='10px Inter,sans-serif'; ctx.textAlign='center';
+  filtered.forEach((d,i) => {
+    if (i%nth===0) { const t=new Date(d.systemTime); ctx.fillText(t.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),xS(i),H-6); }
+  });
+}
+
+function cgmRefresh() { cgmFetchData(); showToast('Glucose data refreshed'); }
+
+function cgmDisconnect() {
+  cgmToken=null; cgmRefreshToken=null; cgmData=[]; cgmIsSandbox=false;
+  localStorage.removeItem(CGM_TOKEN_KEY); localStorage.removeItem(CGM_REFRESH_KEY);
+  document.getElementById('cgm-data-panel').style.display='none';
+  document.getElementById('cgm-credentials-form').style.display='block';
+  document.getElementById('cgm-auth-step').style.display='none';
+  const badge=document.getElementById('cgm-status-badge');
+  badge.textContent='Not Connected'; badge.style.background='var(--warn-light)'; badge.style.color='var(--warn)'; badge.style.borderColor='var(--warn)';
+}
+
+function cgmShowError(msg) { const el=document.getElementById('cgm-auth-error'); el.textContent=msg; el.style.display='block'; }
+
+// =====================
+// TABS
+// =====================
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach((t,i) => {
+    const names = ['today','week','trends','glucose','bloodwork'];
+    t.classList.toggle('active', names[i] === name);
+  });
+  document.querySelectorAll('.tab-content').forEach(c => {
+    c.classList.toggle('active', c.id === 'tab-' + name);
+  });
+  if (name === 'week') renderWeekTab();
+  if (name === 'trends') { setTimeout(() => renderTrendsTab(), 50); }
+  if (name === 'glucose') { setTimeout(() => { if (cgmData.length) cgmDrawChart(); }, 100); }
+}
+
+// =====================
+// DATE
+// =====================
+function renderDate() {
+  const d = new Date();
+  const opts = { weekday:'long', month:'long', day:'numeric', year:'numeric' };
+  document.getElementById('todayDate').textContent = d.toLocaleDateString('en-US', opts);
+}
+
+// =====================
+// INIT
+// =====================
+function init() {
+  renderDate();
+  renderMode();
+  renderSofi();
+  renderRules();
+  renderStats();
+  renderWeekTab();
+  prefillForm();
+  cgmInit();
+}
+
+init();
+window.addEventListener('resize', () => {
+  const active = document.querySelector('.tab-content.active');
+  if (active?.id === 'tab-trends') renderTrendsTab();
+  if (active?.id === 'tab-week') renderWeekTab();
+  if (active?.id === 'tab-glucose') cgmDrawChart();
+});
+</script>
+</body>
+</html>
