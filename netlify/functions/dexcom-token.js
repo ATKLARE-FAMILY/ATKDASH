@@ -42,10 +42,30 @@ exports.handler = async function(event, context) {
       body: params.toString()
     });
 
-    const data = await response.json();
-
-    if (!response.ok) {
-      return { statusCode: response.status, headers, body: JSON.stringify({ error: data.error_description || data.error || 'Token exchange failed' }) };
+    // Capture full raw response for debugging
+    const rawText = await response.text();
+    let data;
+    try {
+      data = JSON.parse(rawText);
+    } catch(e) {
+      return { statusCode: 500, headers, body: JSON.stringify({ error: 'Dexcom returned non-JSON', raw: rawText, status: response.status }) };
     }
 
-    return { statusCode: 200, headers, body: JSON.stringify({ access_token:
+    if (!response.ok) {
+      return { 
+        statusCode: response.status, 
+        headers, 
+        body: JSON.stringify({ 
+          error: data.error_description || data.error || 'Token exchange failed',
+          raw: data,
+          status: response.status
+        }) 
+      };
+    }
+
+    return { statusCode: 200, headers, body: JSON.stringify({ access_token: data.access_token, refresh_token: data.refresh_token, expires_in: data.expires_in }) };
+
+  } catch (error) {
+    return { statusCode: 500, headers, body: JSON.stringify({ error: 'Server error: ' + error.message }) };
+  }
+};
